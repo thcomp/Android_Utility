@@ -1,5 +1,10 @@
 package jp.co.thcomp.util;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Rect;
+import android.util.Log;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,10 +12,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import jp.co.thcomp.util.Constant.LOG_TYPE;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.util.Log;
 
 public class LogUtil {
 	private static boolean LOGOUTPUT_E = true;
@@ -252,6 +253,20 @@ public class LogUtil {
 					dumpBitmap.recycle();
 				}
 			}
+		}
+	}
+
+	public static void exception(String tag, Throwable th){
+		if(LOGOUTPUT_STACKTRACE){
+			th.printStackTrace();
+		}else if(LOGOUTPUT_E){
+			Log.e(tag, th.getLocalizedMessage());
+		}else if(LOGOUTPUT_W){
+			Log.w(tag, th.getLocalizedMessage());
+		}else if(LOGOUTPUT_I){
+			Log.i(tag, th.getLocalizedMessage());
+		}else if(LOGOUTPUT_D){
+			Log.d(tag, th.getLocalizedMessage());
 		}
 	}
 
