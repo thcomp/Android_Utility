@@ -22,12 +22,10 @@ public class ThreadUtil {
 
     public static void runOnMainThread(final Context context, final Object targetObject, final Method method, final Object... params){
         if(IsOnMainThread(context)){
-            if(targetObject != null){
-                try {
-                    method.invoke(targetObject, params);
-                } catch (IllegalAccessException e) {
-                } catch (InvocationTargetException e) {
-                }
+            try {
+                method.invoke(targetObject, params);
+            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException e) {
             }
         }else{
             Handler handler = new Handler(context.getMainLooper());
@@ -37,6 +35,31 @@ public class ThreadUtil {
                     runOnMainThread(context, targetObject, method, params);
                 }
             });
+        }
+    }
+
+    public static void runOnWorkThread(final Context context, final Runnable runnable){
+        if(IsOnMainThread(context)){
+            new Thread(runnable).start();
+        }else{
+            runnable.run();
+        }
+    }
+
+    public static void runOnWorkThread(final Context context, final Object targetObject, final Method method, final Object... params){
+        if(IsOnMainThread(context)){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    runOnWorkThread(context, targetObject, method, params);
+                }
+            }).start();
+        }else{
+            try {
+                method.invoke(targetObject, params);
+            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException e) {
+            }
         }
     }
 }
