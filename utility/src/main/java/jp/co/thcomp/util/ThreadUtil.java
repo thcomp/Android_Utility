@@ -38,6 +38,21 @@ public class ThreadUtil {
         }
     }
 
+    public static void delayRunOnMainThread(final Context context, final long delayTimeMS, final Runnable runnable){
+        Handler handler = new Handler(context.getMainLooper());
+        handler.postDelayed(runnable, delayTimeMS);
+    }
+
+    public static void delayRunOnMainThread(final Context context, final long delayTimeMS, final Object targetObject, final Method method, final Object... params){
+        Handler handler = new Handler(context.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                runOnMainThread(context, targetObject, method, params);
+            }
+        }, delayTimeMS);
+    }
+
     public static void runOnWorkThread(final Context context, final Runnable runnable){
         if(IsOnMainThread(context)){
             new Thread(runnable).start();
@@ -61,5 +76,30 @@ public class ThreadUtil {
             } catch (InvocationTargetException e) {
             }
         }
+    }
+
+    public static void delayRunOnWorkThread(final Context context, final long delayTimeMS, final Runnable runnable){
+        Handler handler = new Handler(context.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                new Thread(runnable).start();
+            }
+        }, delayTimeMS);
+    }
+
+    public static void delayRunOnWorkThread(final Context context, final long delayTimeMS, final Object targetObject, final Method method, final Object... params){
+        Handler handler = new Handler(context.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        runOnWorkThread(context, targetObject, method, params);
+                    }
+                }).start();
+            }
+        }, delayTimeMS);
     }
 }
