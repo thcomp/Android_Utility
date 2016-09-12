@@ -18,6 +18,12 @@ public class NetworkUtil {
 	public static boolean isAvailableNetwork(Context context){
 		ConnectivityManager connManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
+		return networkInfo == null ? false : networkInfo.isAvailable();
+	}
+
+	public static boolean isConnectedNetwork(Context context){
+		ConnectivityManager connManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
 		return networkInfo == null ? false : networkInfo.isConnected();
 	}
 
