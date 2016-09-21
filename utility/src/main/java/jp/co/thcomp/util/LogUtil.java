@@ -260,13 +260,13 @@ public class LogUtil {
 		if(LOGOUTPUT_STACKTRACE){
 			th.printStackTrace();
 		}else if(LOGOUTPUT_E){
-			Log.e(tag, th.getLocalizedMessage());
+			LogUtil.e(tag, th.getLocalizedMessage());
 		}else if(LOGOUTPUT_W){
-			Log.w(tag, th.getLocalizedMessage());
+			LogUtil.w(tag, th.getLocalizedMessage());
 		}else if(LOGOUTPUT_I){
-			Log.i(tag, th.getLocalizedMessage());
+			LogUtil.i(tag, th.getLocalizedMessage());
 		}else if(LOGOUTPUT_D){
-			Log.d(tag, th.getLocalizedMessage());
+			LogUtil.d(tag, th.getLocalizedMessage());
 		}
 	}
 
