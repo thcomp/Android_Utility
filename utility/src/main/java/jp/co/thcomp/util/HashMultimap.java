@@ -1,15 +1,15 @@
 package jp.co.thcomp.util;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import android.util.Log;
-
 @SuppressWarnings("rawtypes")
-public class HashMultimap<K extends Comparable, V>{
+public class HashMultimap<K extends Comparable, V> implements Multimap<K, V> {
     private static String TAG = "HashMultimap";
     private HashMap<K, List<V>> mDataMultimap = new HashMap<K, List<V>>();
     private ArrayList<K> mKeyList = new ArrayList<K>();
@@ -155,7 +155,7 @@ public class HashMultimap<K extends Comparable, V>{
         return retObject;
     }
 
-    public boolean remove(V value) {
+    public boolean removeValue(V value) {
         boolean ret = false;
         List<V> tempDataList = null;
 
