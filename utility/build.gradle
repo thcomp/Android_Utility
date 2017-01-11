@@ -33,7 +33,7 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository url: "file://${repo.absolutePath}"
-            pom.version = '1.0.15'
+            pom.version = '1.0.16'
             pom.groupId = 'jp.co.thcomp'
             pom.artifactId = 'android_utility'
         }

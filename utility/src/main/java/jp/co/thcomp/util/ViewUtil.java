@@ -1,6 +1,9 @@
 package jp.co.thcomp.util;
 
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
+import android.view.View;
 
 public class ViewUtil {
 	public static int getAttributeResourceValue(AttributeSet attrs, String namespace, String attribute, int defValue){
@@ -110,5 +113,13 @@ public class ViewUtil {
 			}
 		}
 		return ret;
+	}
+
+	public static void setBackgroundDrawable(View view, Drawable bgDrawable){
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			view.setBackground(bgDrawable);
+		}else{
+			view.setBackgroundDrawable(bgDrawable);
+		}
 	}
 }
