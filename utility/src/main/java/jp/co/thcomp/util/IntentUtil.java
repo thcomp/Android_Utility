@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.net.Uri;
 
 public class IntentUtil {
-    public static Intent getLaunchMailerIntent(String title, String message){
+    public static Intent getLaunchMailerIntent(String toAddress, String title, String message){
         Intent intent = new Intent();
 
+        if(!toAddress.startsWith("mailto:")){
+            toAddress = "mailto:" + toAddress;
+        }
+
         intent.putExtra(Intent.EXTRA_EMAIL, "mailto:");
-        intent.setData(Uri.parse("mailto:"));
+        intent.setData(Uri.parse(toAddress));
         intent.setAction(Intent.ACTION_SENDTO);
         intent.putExtra(Intent.EXTRA_SUBJECT, title);
         intent.putExtra(Intent.EXTRA_TEXT, message);
