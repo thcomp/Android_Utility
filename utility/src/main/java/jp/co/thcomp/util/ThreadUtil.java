@@ -159,6 +159,7 @@ public class ThreadUtil {
         }
 
         public void initialize() {
+            stop();
             synchronized (this) {
                 stopped = false;
             }
