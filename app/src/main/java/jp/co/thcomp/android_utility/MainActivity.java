@@ -1,8 +1,11 @@
 package jp.co.thcomp.android_utility;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +13,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import jp.co.thcomp.android_utility.data.TestData;
 import jp.co.thcomp.android_utility.manager.TestDataManager;
+import jp.co.thcomp.util.LogUtil;
+import jp.co.thcomp.util.RuntimePermissionUtil;
 
 public class MainActivity extends AppCompatActivity {
     private EditText mEtName;
@@ -26,15 +35,77 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDataManager = new TestDataManager(this, 1);
-        mEtName = (EditText) findViewById(R.id.etName);
-        mEtValue = (EditText) findViewById(R.id.etValue);
-        Button btnAction = (Button) findViewById(R.id.btnAdd);
-        btnAction.setText("add");
-        btnAction.setOnClickListener(mBtnClickListener);
+        RuntimePermissionUtil.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, new RuntimePermissionUtil.OnRequestPermissionsResultListener() {
+            @Override
+            public void onRequestPermissionsResult(String[] permissions, int[] grantResults) {
+                boolean allGrants = true;
 
-        ExpandDatabaseTask task = new ExpandDatabaseTask();
-        task.execute();
+                for(int grantResult : grantResults){
+                    if(grantResult == PackageManager.PERMISSION_DENIED){
+                        allGrants = false;
+                        break;
+                    }
+                }
+
+                if(allGrants){
+                    File tempFile = new File("/mnt/sdcard/test.txt");
+                    FileOutputStream outputStream = null;
+                    try{
+                        outputStream = new FileOutputStream(tempFile);
+                        outputStream.write("test.txt".getBytes());
+                    }catch(IOException e){
+                        finish();
+                        return;
+                    }finally {
+                        if(outputStream != null){
+                            try {
+                                outputStream.close();
+                            } catch (IOException e) {
+                                finish();
+                                return;
+                            }
+                        }
+                    }
+                    FileInputStream inputStream = null;
+                    try{
+                        inputStream = new FileInputStream(tempFile);
+                        byte[] readBuffer = new byte[1024];
+                        int readSize = inputStream.read(readBuffer);
+                        LogUtil.d("test",  new String(readBuffer, 0, readSize));
+                    }catch(IOException e){
+                        finish();
+                        return;
+                    }finally {
+                        if(inputStream != null){
+                            try {
+                                inputStream.close();
+                            } catch (IOException e) {
+                                finish();
+                                return;
+                            }
+                        }
+                    }
+
+                    mDataManager = new TestDataManager(MainActivity.this, 1);
+                    mEtName = (EditText) findViewById(R.id.etName);
+                    mEtValue = (EditText) findViewById(R.id.etValue);
+                    Button btnAction = (Button) findViewById(R.id.btnAdd);
+                    btnAction.setText("add");
+                    btnAction.setOnClickListener(mBtnClickListener);
+
+                    ExpandDatabaseTask task = new ExpandDatabaseTask();
+                    task.execute();
+                }else{
+                    finish();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        RuntimePermissionUtil.onRequestPermissionsResult(requestCode,  permissions, grantResults);
     }
 
     private void addData() {
