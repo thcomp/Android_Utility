@@ -9,13 +9,17 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="jp.co.thcomp.android_utility.MainActivity">
+    tools:context="jp.co.thcomp.android_utility.DialogHelperTestActivity">
 
     <LinearLayout
-        android:id="@+id/llMenuItemList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <Button
+            android:id="@+id/btnTestStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test start"/>
     </LinearLayout>
 </ScrollView>

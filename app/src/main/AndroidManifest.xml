@@ -18,6 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".DataManagerTestActivity" android:exported="false" />
+        <activity android:name=".DialogHelperTestActivity" android:exported="false" />
     </application>
 
 </manifest>
