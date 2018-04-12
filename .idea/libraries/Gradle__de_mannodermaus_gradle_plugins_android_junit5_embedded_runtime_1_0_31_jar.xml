@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: de.mannodermaus.gradle.plugins:android-junit5-embedded-runtime:1.0.31@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/de.mannodermaus.gradle.plugins/android-junit5-embedded-runtime/1.0.31/d11c407973e7bc3805dd141cb9f8507ad8a806ca/android-junit5-embedded-runtime-1.0.31.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/de.mannodermaus.gradle.plugins/android-junit5-embedded-runtime/1.0.31/686ac241b797530578080bdc899805bab15feeec/android-junit5-embedded-runtime-1.0.31-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

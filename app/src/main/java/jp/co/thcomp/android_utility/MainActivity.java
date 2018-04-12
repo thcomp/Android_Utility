@@ -11,6 +11,7 @@ public class MainActivity extends AppCompatActivity {
     private static MenuItem[] sMenuItemArray = {
             new MenuItem("data manager", DataManagerTestActivity.class),
             new MenuItem("dialog helper", DialogHelperTestActivity.class),
+            new MenuItem("progress dialog helper", ProgressDialogHelperTestActivity.class),
     };
 
     @Override

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="jp.co.thcomp.android_utility"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="jp.co.thcomp.android_utility">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -18,8 +18,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".DataManagerTestActivity" android:exported="false" />
-        <activity android:name=".DialogHelperTestActivity" android:exported="false" />
+        <activity
+            android:name=".DataManagerTestActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".DialogHelperTestActivity"
+            android:exported="false"/>
+        <activity android:name=".ProgressDialogHelperTestActivity">
+        </activity>
     </application>
 
 </manifest>
