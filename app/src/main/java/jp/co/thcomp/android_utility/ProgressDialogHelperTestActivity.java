@@ -24,6 +24,5 @@ public class ProgressDialogHelperTestActivity extends AppCompatActivity {
 
     protected void startProgressDialogHelperTest(){
         final ProgressDialogHelper dialogHelper = new ProgressDialogHelper(this, ProgressDialog.STYLE_HORIZONTAL);
-        dialogHelper.
     }
 }
