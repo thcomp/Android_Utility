@@ -12,6 +12,7 @@ class AlertDialogHelper implements DialogHelperInterface {
     private AlertDialog.Builder mBuilder;
     private AlertDialog mDialog;
     private boolean mCanceledOnTouchOutside = false;
+    private boolean mIsShowing = false;
     private DialogInterface.OnDismissListener mDismissListener;
     private DialogInterface.OnShowListener mShowListener;
 
@@ -32,6 +33,7 @@ class AlertDialogHelper implements DialogHelperInterface {
     public void cancel() {
         try {
             mDialog.cancel();
+            mIsShowing = false;
         } catch (Exception e) {
             // 処理なし
         }
@@ -41,6 +43,7 @@ class AlertDialogHelper implements DialogHelperInterface {
     public void dismiss() {
         try {
             mDialog.dismiss();
+            mIsShowing = false;
         } catch (Exception e) {
             // 処理なし
         }
@@ -50,6 +53,7 @@ class AlertDialogHelper implements DialogHelperInterface {
     public void hide() {
         try {
             mDialog.hide();
+            mIsShowing = false;
         } catch (Exception e) {
             // 処理なし
         }
@@ -58,24 +62,21 @@ class AlertDialogHelper implements DialogHelperInterface {
     @Override
     public void show() {
         if (mDialog == null) {
-            mDialog = mBuilder.show();
+            mDialog = mBuilder.create();
             mDialog.setOnShowListener(mShowListener);
             mDialog.setOnDismissListener(mDismissListener);
             mDialog.setCanceledOnTouchOutside(mCanceledOnTouchOutside);
+        }
+
+        if(!mIsShowing){
+            mDialog.show();
+            mIsShowing = true;
         }
     }
 
     @Override
     public boolean isShowing() {
-        boolean ret = false;
-
-        try {
-            ret = mDialog.isShowing();
-        } catch (Exception e) {
-            // 処理なし
-        }
-
-        return ret;
+        return mIsShowing;
     }
 
     @Override

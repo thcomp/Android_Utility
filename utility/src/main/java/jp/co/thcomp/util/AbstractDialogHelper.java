@@ -8,8 +8,9 @@ import android.view.View;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract class AbstractDialogHelper implements DialogHelperInterface {
+abstract public class AbstractDialogHelper implements DialogHelperInterface {
     protected static final HashMap<String, DialogHelperInterface> sManagedDialogMap = new HashMap<>();
+    protected Context mContext;
     protected DialogHelperInterface mDialogHelper;
     protected String mShowingDialogId;
 
@@ -18,7 +19,7 @@ abstract class AbstractDialogHelper implements DialogHelperInterface {
     }
 
     public AbstractDialogHelper(Context context, Integer themeId) {
-        // 処理なし
+        mContext = context;
     }
 
     public static void clear(){
@@ -38,34 +39,61 @@ abstract class AbstractDialogHelper implements DialogHelperInterface {
 
     @Override
     public void cancel() {
-        mDialogHelper.cancel();
+        if(ThreadUtil.IsOnMainThread(mContext)){
+            mDialogHelper.cancel();
+        }else{
+            ThreadUtil.runOnMainThread(mContext, new Runnable() {
+                @Override
+                public void run() {
+                    cancel();
+                }
+            });
+        }
     }
 
     @Override
     public void hide() {
-        mDialogHelper.hide();
+        dismiss();
     }
 
     @Override
     public void dismiss() {
-        synchronized (sManagedDialogMap) {
-            if (mShowingDialogId != null) {
-                sManagedDialogMap.remove(mShowingDialogId);
-                mShowingDialogId = null;
-                mDialogHelper.dismiss();
+        if(ThreadUtil.IsOnMainThread(mContext)) {
+            synchronized (sManagedDialogMap) {
+                if (mShowingDialogId != null) {
+                    sManagedDialogMap.remove(mShowingDialogId);
+                    mShowingDialogId = null;
+                    mDialogHelper.dismiss();
+                }
             }
+        }else{
+            ThreadUtil.runOnMainThread(mContext, new Runnable() {
+                @Override
+                public void run() {
+                    dismiss();
+                }
+            });
         }
     }
 
     @Override
     public void show() {
-        synchronized (sManagedDialogMap) {
-            if (mShowingDialogId == null) {
-                StackTraceElement element = StackTraceUtil.getClassController(AbstractDialogHelper.class);
-                mShowingDialogId = element.getClassName() + "#" + element.getLineNumber();
-                sManagedDialogMap.put(mShowingDialogId, mDialogHelper);
-                mDialogHelper.show();
+        if(ThreadUtil.IsOnMainThread(mContext)) {
+            synchronized (sManagedDialogMap) {
+                if (mShowingDialogId == null) {
+                    StackTraceElement element = StackTraceUtil.getClassController(AbstractDialogHelper.class);
+                    mShowingDialogId = element.getClassName() + "#" + element.getLineNumber();
+                    sManagedDialogMap.put(mShowingDialogId, mDialogHelper);
+                    mDialogHelper.show();
+                }
             }
+        }else{
+            ThreadUtil.runOnMainThread(mContext, new Runnable() {
+                @Override
+                public void run() {
+                    show();
+                }
+            });
         }
     }
 
