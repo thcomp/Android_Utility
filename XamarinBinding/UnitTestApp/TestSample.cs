@@ -10,6 +10,7 @@ namespace UnitTestApp
         [Test]
         public void TestDialogHelper()
         {
+            DialogHelper a;
             //MainActivity.sInstance.RunOnUiThread(delegate ()
             //{
             //    DialogHelper dialogHelper = new DialogHelper(MainActivity.sInstance);
