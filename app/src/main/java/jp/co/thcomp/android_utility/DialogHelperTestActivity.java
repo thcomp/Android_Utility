@@ -26,6 +26,12 @@ public class DialogHelperTestActivity extends Activity {
                 testDialogHelper();
             }
         });
+        findViewById(R.id.btnListenerTestStart).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listenerTestDialogHelper();
+            }
+        });
     }
 
     @Override
@@ -95,6 +101,175 @@ public class DialogHelperTestActivity extends Activity {
                         )
                         .icon(R.mipmap.ic_launcher)
                         .show();
+            }
+        });
+    }
+
+    private int mTestCounter = 0;
+    private void listenerTestDialogHelper(){
+        ThreadUtil.runOnWorkThread(this, new Runnable() {
+            @Override
+            public void run() {
+                {
+                    int counter = mTestCounter = 0;
+                    DialogHelper dialogHelper = new DialogHelper(DialogHelperTestActivity.this);
+                    final ThreadUtil.OnetimeSemaphore semaphore = new ThreadUtil.OnetimeSemaphore();
+
+                    // showListener
+                    dialogHelper.showListener(new DialogInterface.OnShowListener() {
+                        @Override
+                        public void onShow(DialogInterface dialog) {
+                            if (!ThreadUtil.IsOnMainThread(DialogHelperTestActivity.this)) {
+                                throw new RuntimeException("onShow is called on work thread");
+                            }
+
+                            mTestCounter++;
+                            semaphore.stop();
+                        }
+                    });
+
+                    dialogHelper.show();
+                    semaphore.start(1000);
+
+                    if (mTestCounter == counter) {
+                        throw new RuntimeException("mTestCounter is not updated");
+                    }
+                    dialogHelper.dismiss();
+                }
+
+                {
+                    int counter = mTestCounter = 0;
+                    DialogHelper dialogHelper = new DialogHelper(DialogHelperTestActivity.this);
+                    final ThreadUtil.OnetimeSemaphore semaphore = new ThreadUtil.OnetimeSemaphore();
+
+                    // dismissListener
+                    dialogHelper.dismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            if (!ThreadUtil.IsOnMainThread(DialogHelperTestActivity.this)) {
+                                throw new RuntimeException("onDismiss is called on work thread");
+                            }
+
+                            mTestCounter++;
+                            semaphore.stop();
+                        }
+                    });
+
+                    dialogHelper.show();
+                    dialogHelper.dismiss();
+                    semaphore.start(1000);
+
+                    if (mTestCounter == counter) {
+                        throw new RuntimeException("mTestCounter is not updated");
+                    }
+                }
+
+                {
+                    int counter = mTestCounter = 0;
+                    DialogHelper dialogHelper = new DialogHelper(DialogHelperTestActivity.this);
+                    final ThreadUtil.OnetimeSemaphore semaphore = new ThreadUtil.OnetimeSemaphore();
+
+                    // cancelListener
+                    dialogHelper.cancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            if (!ThreadUtil.IsOnMainThread(DialogHelperTestActivity.this)) {
+                                throw new RuntimeException("onDismiss is called on work thread");
+                            }
+
+                            mTestCounter++;
+                            semaphore.stop();
+                        }
+                    });
+
+                    dialogHelper.show();
+                    dialogHelper.cancel();
+                    semaphore.start(1000);
+
+                    if (mTestCounter == counter) {
+                        throw new RuntimeException("mTestCounter is not updated");
+                    }
+                    dialogHelper.dismiss();
+                }
+
+                {
+                    DialogHelper dialogHelper = new DialogHelper(DialogHelperTestActivity.this);
+
+                    if(dialogHelper.isShowing()){
+                        throw new RuntimeException("isShowing is true");
+                    }
+
+                    dialogHelper.show();
+                    synchronized (DialogHelperTestActivity.this){
+                        try {
+                            DialogHelperTestActivity.this.wait(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(!dialogHelper.isShowing()){
+                        throw new RuntimeException("isShowing is false");
+                    }
+
+                    dialogHelper.hide();
+                    if(!ThreadUtil.IsOnMainThread(DialogHelperTestActivity.this)){
+                        synchronized (DialogHelperTestActivity.this){
+                            try {
+                                DialogHelperTestActivity.this.wait(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    if(dialogHelper.isShowing()){
+                        throw new RuntimeException("isShowing is true");
+                    }
+
+                    dialogHelper.show();
+                    if(!ThreadUtil.IsOnMainThread(DialogHelperTestActivity.this)){
+                        synchronized (DialogHelperTestActivity.this){
+                            try {
+                                DialogHelperTestActivity.this.wait(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    if(!dialogHelper.isShowing()){
+                        throw new RuntimeException("isShowing is false");
+                    }
+
+                    dialogHelper.cancel();
+                    if(!ThreadUtil.IsOnMainThread(DialogHelperTestActivity.this)){
+                        synchronized (DialogHelperTestActivity.this){
+                            try {
+                                DialogHelperTestActivity.this.wait(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    if(dialogHelper.isShowing()){
+                        throw new RuntimeException("isShowing is true");
+                    }
+
+                    dialogHelper.dismiss();
+                    if(!ThreadUtil.IsOnMainThread(DialogHelperTestActivity.this)){
+                        synchronized (DialogHelperTestActivity.this){
+                            try {
+                                DialogHelperTestActivity.this.wait(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    if(dialogHelper.isShowing()) {
+                        throw new RuntimeException("isShowing is true");
+                    }
+                }
+
+                DialogHelper dialogHelper = new DialogHelper(DialogHelperTestActivity.this);
+                dialogHelper.message("test success").button(DialogInterface.BUTTON_POSITIVE, "close", null).show();
             }
         });
     }

@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DialogHelper extends AbstractDialogHelper {
-    protected DialogHelperInterface mDialogHelper;
-
     public DialogHelper(Context context) {
         this(context, null);
     }
